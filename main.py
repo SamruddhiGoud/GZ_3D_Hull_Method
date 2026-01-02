@@ -9,29 +9,24 @@ Purpose: Research-grade 3D hydrostatics (NOT certification level)
 import numpy as np
 import matplotlib.pyplot as plt
 
-from geometry.surface import sample_wigley_surface
-from geometry.mesh import triangulate_surface, mirror_mesh, close_deck, close_end
 from geometry.transform import rotate_about_x
 from hydrostatics.clip import clip_mesh_at_draft
 from hydrostatics.volume_centroid import volume_and_centroid
 
 
 def compute_GZ_curve(KG, draft):
-    # ----------------------------
-    # Hull parameters (Wigley)
-    # ----------------------------
-    L, B, T = 100.0, 20.0, 10.0
-    NX, NZ = 61, 61
-
+  
     # ----------------------------
     # Build full hull once
     # ----------------------------
-    X, Y, Z = sample_wigley_surface(L, B, T, NX, NZ)
-    v, f = triangulate_surface(X, Y, Z)
-    v, f = mirror_mesh(v, f)
-    v, f = close_deck(v, f)
-    v, f = close_end(v, f, -L / 2)
-    v, f = close_end(v, f, +L / 2)
+    from geometry.rectangular import rectangular_hull_mesh
+
+    # ----------------------------
+    # Rectangular hull parameters
+    # ----------------------------
+    L, B, T = 100.0, 20.0, 10.0
+
+    v, f = rectangular_hull_mesh(L, B, T)
 
     # ----------------------------
     # Heel angles
